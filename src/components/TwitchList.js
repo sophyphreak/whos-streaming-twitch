@@ -1,16 +1,6 @@
-class App extends React.Component {
-  render() {
-    return (
-      <div>
-        <div className="title">
-          <h2>Who's Streaming on Twitch Right Now?</h2>
-          <h5>Created by Andrew Horn</h5>
-        </div>
-        <TwitchList/>
-      </div>
-    );
-  }
-};
+import React from 'react';
+import axios from 'axios';
+import Twitch from './Twitch';
 
 class TwitchList extends React.Component {
   
@@ -24,7 +14,7 @@ class TwitchList extends React.Component {
   };
     
   populateJsons (twitches) {
-    twitches.map((twitch) => {
+    twitches.forEach((twitch) => {
     let axiosUrl = 'https://cors-anywhere.herokuapp.com/https://wind-bow.gomix.me/twitch-api/streams/' + twitch;
     
       axios
@@ -54,6 +44,7 @@ class TwitchList extends React.Component {
         return <Twitch json={this.state.jsons[key]} name={key}/>;
       } catch (e) {
         console.log(e);
+        return undefined;
       }
     });
   };
@@ -66,47 +57,5 @@ class TwitchList extends React.Component {
     );
   }
 };
-        
-class Twitch extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  
-  renderTwitch(props) {
-    let hyperlink = 'https://www.twitch.tv/' + this.props.name;
-    
-    if(this.props.json == null) {
-      return (
-        <div>
-          <p><a href={hyperlink} target="_blank">{this.props.name}</a>--------- Offline for now</p>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <p>
-            <a href={hyperlink} target="_blank">
-              {this.props.name}
-            </a>
-            --------- {this.props.json[0]}: {this.props.json[1]}
-          </p>
-        </div>
-      );
-    };
-  };
-  
 
-  
-  render() {
-    return (
-      <div>
-        {this.renderTwitch(this.props)}
-      </div>
-    );
-  }
-};
-
-ReactDOM.render(
-  <App/>,
-  document.getElementById("container")
-);
+export default TwitchList;
